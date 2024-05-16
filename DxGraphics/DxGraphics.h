@@ -234,4 +234,12 @@ private:
 
 DXG_EXPORT ATOM RegisterWndClass(HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon = nullptr, HICON hIconSm = nullptr, HCURSOR hCursor = nullptr, LPCWSTR lpszMenuName = nullptr);
 
+struct ButtonPair
+{
+	D2D1_RECT_F BtnRect;
+	int BtnCommand;
+};
+
+DXG_EXPORT bool PressButton(HWND hWnd, bool ForceCommand, int xPos, int yPos, ButtonPair* ButtonPairs, int PairsNum);
+
 #endif // !DXGRAPHICS_H

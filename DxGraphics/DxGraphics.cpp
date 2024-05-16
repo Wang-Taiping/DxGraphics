@@ -818,3 +818,21 @@ ATOM RegisterWndClass(HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWn
 	wcex.lpszMenuName = lpszMenuName;
 	return RegisterClassExW(&wcex);
 }
+
+static inline bool IsPosInRect(int xPos, int yPos, D2D1_RECT_F Rect)
+{
+	return (xPos > Rect.left && xPos < Rect.right && yPos > Rect.top && yPos < Rect.bottom);
+}
+
+bool PressButton(HWND hWnd, bool ForceCommand, int xPos, int yPos, ButtonPair* ButtonPairs, int PairsNum)
+{
+	for (size_t i = 0; i < PairsNum; i++)
+	{
+		if (IsPosInRect(xPos, yPos, ButtonPairs[i].BtnRect)) {
+			if (ForceCommand) SendMessageW(hWnd, WM_COMMAND, ButtonPairs[i].BtnCommand, 0);
+			else PostMessageW(hWnd, WM_COMMAND, ButtonPairs[i].BtnCommand, 0);
+			return true;
+		}
+	}
+	return false;
+}
