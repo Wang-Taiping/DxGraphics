@@ -87,7 +87,7 @@ DxFontCollection::DxFontCollection()
 
 DxFontCollection::~DxFontCollection()
 {
-	Release();
+	Uninitialize();
 }
 
 HRESULT DxFontCollection::Initialize(DxWriteFactory::WriteFactory* pWriteFactory, LPCWSTR szPath)
@@ -189,7 +189,7 @@ HRESULT DxFontCollection::Initialize(DxWriteFactory::WriteFactory* pWriteFactory
 	return hr;
 }
 
-void DxFontCollection::Release()
+void DxFontCollection::Uninitialize()
 {
 	if (pFontCollection) pFontCollection->Release();
 	if (pMemoryLoader) {
@@ -237,7 +237,7 @@ DxTextFormat::DxTextFormat()
 
 DxTextFormat::~DxTextFormat()
 {
-	Release();
+	Uninitialize();
 }
 
 HRESULT DxTextFormat::Initialize(DxWriteFactory::WriteFactory* pWriteFactory, LPCWSTR szFontFamilyName, DxFontCollection::WriteFontCollection* pFontCollection, float fFontSize, LPCWSTR szLocaleName)
@@ -261,7 +261,7 @@ HRESULT DxTextFormat::Initialize(DxFontCollection* pFontCollection, float fFontS
 	return Initialize(pFontCollection->WriteFactory(), pFontCollection->FontFamily(), pFontCollection->FontCollection(), fFontSize, szLocaleName);
 }
 
-void DxTextFormat::Release()
+void DxTextFormat::Uninitialize()
 {
 	if (pTextFormat) pTextFormat->Release();
 	pTextFormat = nullptr;
@@ -409,7 +409,7 @@ void DxTarget2D::DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F B
 	pBrush = nullptr;
 }
 
-bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap, D2D1_COLOR_F FrontColor, D2D1_COLOR_F BackColor)
+bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap, D2D1_COLOR_F FrontColor, D2D1_COLOR_F BackColor, D2D1_COLOR_F BorderColor)
 {
 	// 先使用IDWriteTextLayout计算结果，如果不会溢出则直接输出到窗口
 	// 如果计算发现会溢出则使用Layout减小字号再次计算，直至不会溢出为止
@@ -434,7 +434,7 @@ bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* Text
 			if (pBrush) pTarget->FillRectangle(Rect, pBrush);
 			pBrush->Release();
 		}
-		hr = pTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &pBrush);
+		hr = pTarget->CreateSolidColorBrush(BorderColor, &pBrush);
 		if (pBrush) pTarget->DrawRectangle(Rect, pBrush);
 		pBrush->Release();
 	}

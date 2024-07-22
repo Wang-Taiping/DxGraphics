@@ -65,7 +65,7 @@ public:
 	DxFontCollection& operator=(const DxFontCollection&) = delete;
 	HRESULT Initialize(DxWriteFactory::WriteFactory* pWriteFactory, LPCWSTR szPath);
 	HRESULT Initialize(DxWriteFactory::WriteFactory* pWriteFactory, HMODULE hModule, LPCWSTR szResourceName, LPCWSTR szResourceType);
-	void Release();
+	void Uninitialize();
 	WriteFontCollection* FontCollection();
 	DxWriteFactory::WriteFactory* WriteFactory();
 	LPCWSTR FontFamily();
@@ -90,7 +90,7 @@ public:
 	DxTextFormat& operator=(const DxTextFormat&) = delete;
 	HRESULT Initialize(DxWriteFactory::WriteFactory* pWriteFactory, LPCWSTR szFontFamilyName, DxFontCollection::WriteFontCollection* pFontCollection, float fFontSize, LPCWSTR szLocaleName);
 	HRESULT Initialize(DxFontCollection* pFontCollection, float fFontSize, LPCWSTR szLocaleName);
-	void Release();
+	void Uninitialize();
 	WriteTextFormat* TextFormat();
 	DxWriteFactory::WriteFactory* WriteFactory();
 	float FontSize();
@@ -138,7 +138,7 @@ public:
 	void FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
 	D2D1_RECT_F PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
 	void DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F BackColor, D2D1_COLOR_F FrontColor); // 0.0f ~ 100.0f
-	bool DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap = nullptr, D2D1_COLOR_F FrontColor = D2D1::ColorF(D2D1::ColorF::Black), D2D1_COLOR_F BackColor = D2D1::ColorF(D2D1::ColorF::White));
+	bool DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap = nullptr, D2D1_COLOR_F FrontColor = D2D1::ColorF(D2D1::ColorF::Black), D2D1_COLOR_F BackColor = D2D1::ColorF(D2D1::ColorF::White), D2D1_COLOR_F BorderColor = D2D1::ColorF(D2D1::ColorF::Black));
 	D2DTarget* Target();
 	operator D2DTarget* ();
 
