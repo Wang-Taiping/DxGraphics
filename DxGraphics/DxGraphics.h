@@ -7,15 +7,22 @@
 #include <dwrite_3.h>
 
 #ifdef DXG_EXPORT
-#undef DXG_EXPORT
+#error Macro 'DXG_EXPORT' already defined.
 #endif // DXG_EXPORT
+
 #ifdef DXG_BUILD
-#define DXG_EXPORT __declspec(dllexport)
+#define DXG_EXPORT	__declspec(dllexport)
 #else
-#define DXG_EXPORT __declspec(dllimport)
+#define DXG_EXPORT	__declspec(dllimport)
 #endif // DXG_BUILD
 
-#define DXG_API __stdcall
+#ifdef DXG_STATIC
+#undef DXG_EXPORT
+#define DXG_EXPORT
+#endif // DXG_STATIC
+
+#define DXG_API			__stdcall
+#define DXG_CALLBACK	__stdcall
 
 class DXG_EXPORT DxImagingFactory
 {
@@ -139,6 +146,9 @@ public:
 	D2D1_RECT_F PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
 	void DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F BackColor, D2D1_COLOR_F FrontColor); // 0.0f ~ 100.0f
 	bool DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap = nullptr, D2D1_COLOR_F FrontColor = D2D1::ColorF(D2D1::ColorF::Black), D2D1_COLOR_F BackColor = D2D1::ColorF(D2D1::ColorF::White), D2D1_COLOR_F BorderColor = D2D1::ColorF(D2D1::ColorF::Black));
+	HRESULT Resize(UINT Width, UINT Height);
+	HRESULT Resize(const D2D1_SIZE_U& pixelSize);
+	HRESULT Resize(const D2D1_SIZE_U* pixelSize);
 	D2DTarget* Target();
 	operator D2DTarget* ();
 

@@ -461,6 +461,21 @@ bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* Text
 	return false;
 }
 
+HRESULT DxTarget2D::Resize(UINT Width, UINT Height)
+{
+	return pTarget->Resize(D2D1::SizeU(Width, Height));
+}
+
+HRESULT DxTarget2D::Resize(const D2D1_SIZE_U& pixelSize)
+{
+	return pTarget->Resize(pixelSize);
+}
+
+HRESULT DxTarget2D::Resize(const D2D1_SIZE_U* pixelSize)
+{
+	return pTarget->Resize(pixelSize);
+}
+
 DxTarget2D::D2DTarget* DxTarget2D::Target()
 {
 	return pTarget;
