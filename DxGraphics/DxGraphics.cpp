@@ -651,13 +651,13 @@ D2D1_RECT_F CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetR
 	if (rS > rB)
 	{
 		yB = xB / rS;
-		rR.top = (rR.top + rR.bottom - yB) / 2;
+		rR.top = (rR.top + rR.bottom - yB) / 2.0f;
 		rR.bottom = rR.top + yB;
 	}
 	else if (rS < rB)
 	{
 		xB = yB * rS;
-		rR.left = (rR.left + rR.right - xB) / 2;
+		rR.left = (rR.left + rR.right - xB) / 2.0f;
 		rR.right = rR.left + xB;
 	}
 	return rR;
@@ -676,13 +676,61 @@ D2D1_RECT_F CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRe
 	if (rS > rB)
 	{
 		xS = yS * rB;
-		rR.left = (rR.left + rR.right - xS) / 2;
+		rR.left = (rR.left + rR.right - xS) / 2.0f;
 		rR.right = rR.left + xS;
 	}
 	else if (rS < rB)
 	{
 		yS = xS / rB;
-		rR.top = (rR.top + rR.bottom - yS) / 2;
+		rR.top = (rR.top + rR.bottom - yS) / 2.0f;
+		rR.bottom = rR.top + yS;
+	}
+	return rR;
+}
+
+D2D1_RECT_U CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect)
+{
+	UINT xS = targetRect.right - targetRect.left;
+	UINT yS = targetRect.bottom - targetRect.top;
+	UINT rS = FLOAT(xS) / yS;
+	UINT xB = bitmapRect.right - bitmapRect.left;
+	UINT yB = bitmapRect.bottom - bitmapRect.top;
+	UINT rB = FLOAT(xB) / yB;
+	D2D1_RECT_U rR = bitmapRect;
+	if (rS > rB)
+	{
+		yB = FLOAT(xB) / rS;
+		rR.top = FLOAT(rR.top + rR.bottom - yB) / 2.0f;
+		rR.bottom = rR.top + yB;
+	}
+	else if (rS < rB)
+	{
+		xB = yB * rS;
+		rR.left = FLOAT(rR.left + rR.right - xB) / 2.0f;
+		rR.right = rR.left + xB;
+	}
+	return rR;
+}
+
+D2D1_RECT_U CalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect)
+{
+	UINT xS = targetRect.right - targetRect.left;
+	UINT yS = targetRect.bottom - targetRect.top;
+	UINT rS = FLOAT(xS) / yS;
+	UINT xB = bitmapRect.right - bitmapRect.left;
+	UINT yB = bitmapRect.bottom - bitmapRect.top;
+	UINT rB = FLOAT(xB) / yB;
+	D2D1_RECT_U rR = targetRect;
+	if (rS > rB)
+	{
+		xS = yS * rB;
+		rR.left = FLOAT(rR.left + rR.right - xS) / 2.0f;
+		rR.right = rR.left + xS;
+	}
+	else if (rS < rB)
+	{
+		yS = FLOAT(xS) / rB;
+		rR.top = FLOAT(rR.top + rR.bottom - yS) / 2.0f;
 		rR.bottom = rR.top + yS;
 	}
 	return rR;
@@ -706,4 +754,98 @@ FLOAT PixelsToDips(UINT Pixels, FLOAT DpiScale)
 UINT DipsToPixels(FLOAT Dips, FLOAT DpiScale)
 {
 	return Dips * DpiScale;
+}
+
+D2D1_SIZE_F CalcSizeFormRect(D2D1_RECT_F Rect)
+{
+	return D2D1_SIZE_F({ Rect.right - Rect.left, Rect.bottom - Rect.top });
+}
+
+D2D1_SIZE_U CalcSizeFormRect(D2D1_RECT_U Rect)
+{
+	return D2D1_SIZE_U({ Rect.right - Rect.left, Rect.bottom - Rect.top });
+}
+
+D2D1_SIZE_F SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale)
+{
+	return D2D1_SIZE_F({
+		Pixels.width / DpiScale,
+		Pixels.height / DpiScale
+		});
+}
+
+D2D1_RECT_F RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale)
+{
+	return D2D1_RECT_F({
+		FLOAT(Pixels.left) / DpiScale,
+		FLOAT(Pixels.top) / DpiScale,
+		FLOAT(Pixels.right) / DpiScale,
+		FLOAT(Pixels.bottom) / DpiScale
+		});
+}
+
+D2D1_SIZE_U SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale)
+{
+	return D2D1_SIZE_U({
+		UINT(Dips.width * DpiScale),
+		UINT(Dips.height * DpiScale)
+		});
+}
+
+D2D1_RECT_U RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale)
+{
+	return D2D1_RECT_U({
+		UINT(Dips.left * DpiScale),
+		UINT(Dips.top * DpiScale),
+		UINT(Dips.right * DpiScale),
+		UINT(Dips.bottom * DpiScale)
+		});
+}
+
+D2D1_RECT_F CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas)
+{
+	D2D1_RECT_F result{};
+	FLOAT cWidth = Canvas.right - Canvas.left;
+	FLOAT cHeight = Canvas.bottom - Canvas.top;
+	if (cWidth <= Item.width) {
+		result.left = Canvas.left;
+		result.right = Canvas.right;
+	}
+	else {
+		result.left = Canvas.left + ((cWidth - Item.width) / 2.0f);
+		result.right = result.left + Item.width;
+	}
+	if (cHeight <= Item.height) {
+		result.top = Canvas.top;
+		result.bottom = Canvas.bottom;
+	}
+	else {
+		result.top = Canvas.top + ((cHeight - Item.height) / 2.0f);
+		result.bottom = result.top + Item.height;
+	}
+	return result;
+}
+
+D2D1_RECT_U CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas)
+{
+	D2D1_RECT_U result{};
+	UINT cWidth = Canvas.right - Canvas.left;
+	UINT cHeight = Canvas.bottom - Canvas.top;
+	if (cWidth <= Item.width) {
+		result.left = Canvas.left;
+		result.right = Canvas.right;
+	}
+	else {
+		result.left = Canvas.left + (FLOAT(cWidth - Item.width) / 2.0f);
+		result.right = result.left + Item.width;
+	}
+	if (cHeight <= Item.height) {
+		result.top = Canvas.top;
+		result.bottom = Canvas.bottom;
+	}
+	else {
+		result.top = Canvas.top + (FLOAT(cHeight - Item.height) / 2.0f);
+		result.bottom = result.top + Item.height;
+	}
+	return result;
 }
