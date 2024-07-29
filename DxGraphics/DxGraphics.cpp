@@ -323,6 +323,8 @@ DxTarget2D::DxTarget2D()
 {
 	pTarget = nullptr;
 	hWnd = hWnd;
+	interlayer = GDI_ON_DIRECT2D;
+	tagDraw = false;
 }
 
 DxTarget2D::~DxTarget2D()
@@ -348,20 +350,35 @@ void DxTarget2D::Uninitialize()
 	if (pTarget) pTarget->Release();
 	pTarget = nullptr;
 	hWnd = nullptr;
+	interlayer = GDI_ON_DIRECT2D;
+	tagDraw = false;
+}
+
+void DxTarget2D::SetInterlayer(Interlayer interlayer)
+{
+	if (tagDraw) return;
+	this->interlayer = interlayer;
+}
+
+DxTarget2D::Interlayer DxTarget2D::GetInterlayer() const
+{
+	return interlayer;
 }
 
 bool DxTarget2D::BeginDraw()
 {
+	if (tagDraw) return;
+	tagDraw = true;
 	if (!pTarget) return false;
-	PAINTSTRUCT ps;
-	BeginPaint(hWnd, &ps);
-	EndPaint(hWnd, &ps);
-	pTarget->BeginDraw();
+	if (interlayer == DIRECT2D_ON_GDI) FlushGDI();
 	return true;
 }
 
 HRESULT DxTarget2D::EndDraw()
 {
+	if (!tagDraw) return E_FAIL;
+	tagDraw = false;
+	if (interlayer == GDI_ON_DIRECT2D) FlushGDI();
 	if (!pTarget) return E_FAIL;
 	return pTarget->EndDraw();
 }
@@ -484,6 +501,14 @@ DxTarget2D::D2DTarget* DxTarget2D::Target()
 DxTarget2D::operator D2DTarget* ()
 {
 	return pTarget;
+}
+
+void DxTarget2D::FlushGDI()
+{
+	PAINTSTRUCT ps;
+	BeginPaint(hWnd, &ps);
+	EndPaint(hWnd, &ps);
+	pTarget->BeginDraw();
 }
 
 DxImage::DxImage()

@@ -132,6 +132,11 @@ class DXG_EXPORT DxTarget2D
 {
 public:
 	using D2DTarget = ID2D1HwndRenderTarget;
+	enum Interlayer
+	{
+		GDI_ON_DIRECT2D,
+		DIRECT2D_ON_GDI
+	};
 
 	DxTarget2D();
 	~DxTarget2D();
@@ -139,6 +144,8 @@ public:
 	DxTarget2D& operator=(const DxTarget2D&) = delete;
 	HRESULT Initialize(DxFactory2D::D2DFactory* p2DFactory, HWND hWnd);
 	void Uninitialize();
+	void SetInterlayer(Interlayer interlayer = GDI_ON_DIRECT2D);
+	Interlayer GetInterlayer() const;
 	bool BeginDraw();
 	HRESULT EndDraw();
 	void Clear(D2D1_COLOR_F Color = D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
@@ -155,6 +162,10 @@ public:
 private:
 	D2DTarget* pTarget;
 	HWND hWnd;
+	Interlayer interlayer;
+	bool tagDraw;
+
+	void FlushGDI();
 };
 
 class DXG_EXPORT DxImage
