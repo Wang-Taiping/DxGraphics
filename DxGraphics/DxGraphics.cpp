@@ -2,6 +2,7 @@
 #include <wincodec.h>
 #include <wincodecsdk.h>
 #include <wtypes.h>
+#include <windowsx.h>
 
 DxImagingFactory::DxImagingFactory()
 {
@@ -367,7 +368,7 @@ DxTarget2D::Interlayer DxTarget2D::GetInterlayer() const
 
 bool DxTarget2D::BeginDraw()
 {
-	if (tagDraw) return;
+	if (tagDraw) return false;
 	tagDraw = true;
 	if (!pTarget) return false;
 	if (interlayer == DIRECT2D_ON_GDI) FlushGDI();
@@ -873,4 +874,19 @@ D2D1_RECT_U CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas)
 		result.bottom = result.top + Item.height;
 	}
 	return result;
+}
+
+D2D1_SIZE_U GetPointFromlParam(LPARAM lParam)
+{
+	return D2D1::SizeU(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+}
+
+bool IsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect)
+{
+	return (Point.width > Rect.left && Point.width < Rect.right && Point.height > Rect.top && Point.height < Rect.bottom);
+}
+
+bool IsPointInRect(D2D1_SIZE_U Point, D2D1_RECT_U Rect)
+{
+	return (Point.width > Rect.left && Point.width < Rect.right && Point.height > Rect.top && Point.height < Rect.bottom);
 }

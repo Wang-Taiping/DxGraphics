@@ -3,6 +3,8 @@
 #ifndef DXGRAPHICS_H
 #define DXGRAPHICS_H
 
+#ifdef __cplusplus
+
 #include <d2d1_3.h>
 #include <dwrite_3.h>
 
@@ -189,25 +191,32 @@ private:
 	Image* pImage;
 };
 
-DXG_EXPORT D2D1_RECT_F DXG_API CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
-DXG_EXPORT D2D1_RECT_F DXG_API CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
-DXG_EXPORT D2D1_RECT_U DXG_API CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
-DXG_EXPORT D2D1_RECT_U DXG_API CalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
+DXG_EXPORT D2D1_RECT_F CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
+DXG_EXPORT D2D1_RECT_F CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
+DXG_EXPORT D2D1_RECT_U CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
+DXG_EXPORT D2D1_RECT_U CalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
 
-DXG_EXPORT FLOAT DXG_API GetDpiScaleForSystem();
-DXG_EXPORT FLOAT DXG_API GetDpiScaleForWindow(HWND hWnd);
-DXG_EXPORT FLOAT DXG_API PixelsToDips(UINT Pixels, FLOAT DpiScale);
-DXG_EXPORT UINT DXG_API DipsToPixels(FLOAT Dips, FLOAT DpiScale);
+DXG_EXPORT FLOAT GetDpiScaleForSystem();
+DXG_EXPORT FLOAT GetDpiScaleForWindow(HWND hWnd);
+DXG_EXPORT FLOAT PixelsToDips(UINT Pixels, FLOAT DpiScale);
+DXG_EXPORT UINT DipsToPixels(FLOAT Dips, FLOAT DpiScale);
 
-DXG_EXPORT D2D1_SIZE_F DXG_API CalcSizeFormRect(D2D1_RECT_F Rect);
-DXG_EXPORT D2D1_SIZE_U DXG_API CalcSizeFormRect(D2D1_RECT_U Rect);
+DXG_EXPORT D2D1_SIZE_F CalcSizeFormRect(D2D1_RECT_F Rect);
+DXG_EXPORT D2D1_SIZE_U CalcSizeFormRect(D2D1_RECT_U Rect);
 
-DXG_EXPORT D2D1_SIZE_F DXG_API SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale);
-DXG_EXPORT D2D1_RECT_F DXG_API RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale);
-DXG_EXPORT D2D1_SIZE_U DXG_API SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale);
-DXG_EXPORT D2D1_RECT_U DXG_API RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale);
+DXG_EXPORT D2D1_SIZE_F SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale);
+DXG_EXPORT D2D1_RECT_F RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale);
+DXG_EXPORT D2D1_SIZE_U SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale);
+DXG_EXPORT D2D1_RECT_U RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale);
 
-DXG_EXPORT D2D1_RECT_F DXG_API CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas);
-DXG_EXPORT D2D1_RECT_U DXG_API CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas);
+DXG_EXPORT D2D1_RECT_F CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas);
+DXG_EXPORT D2D1_RECT_U CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas);
+
+DXG_EXPORT D2D1_SIZE_U GetPointFromlParam(LPARAM lParam);
+
+DXG_EXPORT bool IsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect);
+DXG_EXPORT bool IsPointInRect(D2D1_SIZE_U Point, D2D1_RECT_U Rect);
+
+#endif // __cplusplus
 
 #endif // !DXGRAPHICS_H
