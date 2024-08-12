@@ -148,12 +148,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DxGraphics.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGraphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DxGraphics.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
