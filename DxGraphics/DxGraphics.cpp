@@ -214,7 +214,7 @@ DxWriteFactory::WriteFactory* DxFontCollection::WriteFactory()
 	return pWriteFactory;
 }
 
-LPCWSTR DxFontCollection::FontFamily()
+LPCWSTR DxFontCollection::FontFamily() const
 {
 	return lpszFontFamily;
 }
@@ -279,7 +279,7 @@ DxWriteFactory::WriteFactory* DxTextFormat::WriteFactory()
 	return pWriteFactory;
 }
 
-float DxTextFormat::FontSize()
+float DxTextFormat::FontSize() const
 {
 	return fFontSize;
 }
@@ -335,6 +335,7 @@ DxTarget2D::~DxTarget2D()
 
 HRESULT DxTarget2D::Initialize(DxFactory2D::D2DFactory* p2DFactory, HWND hWnd)
 {
+	if (pTarget) return E_FAIL;
 	RECT Rect;
 	GetClientRect(hWnd, &Rect);
 	D2D1_SIZE_U size = D2D1::SizeU(Rect.right - Rect.left, Rect.bottom - Rect.top);
@@ -368,52 +369,58 @@ DxTarget2D::Interlayer DxTarget2D::GetInterlayer() const
 
 bool DxTarget2D::BeginDraw()
 {
+	if (!pTarget) return false;
 	if (tagDraw) return false;
 	tagDraw = true;
-	if (!pTarget) return false;
 	if (interlayer == DIRECT2D_ON_GDI) FlushGDI();
+	pTarget->BeginDraw();
 	return true;
 }
 
 HRESULT DxTarget2D::EndDraw()
 {
+	if (!pTarget) return E_FAIL;
 	if (!tagDraw) return E_FAIL;
 	tagDraw = false;
+	HRESULT hr = pTarget->EndDraw();
 	if (interlayer == GDI_ON_DIRECT2D) FlushGDI();
-	if (!pTarget) return E_FAIL;
-	return pTarget->EndDraw();
+	return hr;
 }
 
 void DxTarget2D::Clear(D2D1_COLOR_F Color)
 {
+	if (!pTarget) return;
 	pTarget->Clear(Color);
 }
 
-void DxTarget2D::FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect)
+void DxTarget2D::FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect, FLOAT alpha)
 {
+	if (!pTarget) return;
 	if (srcRect.left == 0 && srcRect.right == 0 && srcRect.top == 0 && srcRect.bottom == 0)
 	{
 		srcRect.right = pBitmap->GetSize().width;
 		srcRect.bottom = pBitmap->GetSize().height;
 	}
 	srcRect = CalcFillBitmapSourceRect(srcRect, dstRect);
-	pTarget->DrawBitmap(pBitmap, dstRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, srcRect);
+	pTarget->DrawBitmap(pBitmap, dstRect, alpha, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, srcRect);
 }
 
-D2D1_RECT_F DxTarget2D::PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect)
+D2D1_RECT_F DxTarget2D::PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect, FLOAT alpha)
 {
+	if (!pTarget) return { 0 };
 	if (srcRect.left == 0 && srcRect.right == 0 && srcRect.top == 0 && srcRect.bottom == 0)
 	{
 		srcRect.right = pBitmap->GetSize().width;
 		srcRect.bottom = pBitmap->GetSize().height;
 	}
 	dstRect = CalcPutBitmapTargetRect(srcRect, dstRect);
-	pTarget->DrawBitmap(pBitmap, dstRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, srcRect);
+	pTarget->DrawBitmap(pBitmap, dstRect, alpha, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, srcRect);
 	return dstRect;
 }
 
 void DxTarget2D::DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F BackColor, D2D1_COLOR_F FrontColor)
 {
+	if (!pTarget) return;
 	ID2D1SolidColorBrush* pBrush = nullptr;
 	pTarget->CreateSolidColorBrush(BackColor, &pBrush);
 	if (!pBrush) return;
@@ -427,8 +434,9 @@ void DxTarget2D::DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F B
 	pBrush = nullptr;
 }
 
-bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap, D2D1_COLOR_F FrontColor, D2D1_COLOR_F BackColor, D2D1_COLOR_F BorderColor)
+bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap, FLOAT alpha, D2D1_COLOR_F FrontColor, D2D1_COLOR_F BackColor, D2D1_COLOR_F BorderColor)
 {
+	if (!pTarget) return false;
 	// 先使用IDWriteTextLayout计算结果，如果不会溢出则直接输出到窗口
 	// 如果计算发现会溢出则使用Layout减小字号再次计算，直至不会溢出为止
 	// 如果字号减小到预设的最小值还是会溢出就返回false
@@ -446,7 +454,7 @@ bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* Text
 	float fFontSize = TextFormat->FontSize();
 	ID2D1SolidColorBrush* pBrush = nullptr;
 	if (SUCCEEDED(hr)) {
-		if (pBackgroundBitmap) FillBitmap(pBackgroundBitmap, Rect);
+		if (pBackgroundBitmap) FillBitmap(pBackgroundBitmap, Rect, { 0 }, alpha);
 		else {
 			hr = pTarget->CreateSolidColorBrush(BackColor, &pBrush);
 			if (pBrush) pTarget->FillRectangle(Rect, pBrush);
@@ -481,16 +489,19 @@ bool DxTarget2D::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* Text
 
 HRESULT DxTarget2D::Resize(UINT Width, UINT Height)
 {
+	if (!pTarget) return E_FAIL;
 	return pTarget->Resize(D2D1::SizeU(Width, Height));
 }
 
 HRESULT DxTarget2D::Resize(const D2D1_SIZE_U& pixelSize)
 {
+	if (!pTarget) return E_FAIL;
 	return pTarget->Resize(pixelSize);
 }
 
 HRESULT DxTarget2D::Resize(const D2D1_SIZE_U* pixelSize)
 {
+	if (!pTarget) return E_FAIL;
 	return pTarget->Resize(pixelSize);
 }
 
@@ -504,12 +515,11 @@ DxTarget2D::operator D2DTarget* ()
 	return pTarget;
 }
 
-void DxTarget2D::FlushGDI()
+void DxTarget2D::FlushGDI() const
 {
 	PAINTSTRUCT ps;
 	BeginPaint(hWnd, &ps);
 	EndPaint(hWnd, &ps);
-	pTarget->BeginDraw();
 }
 
 DxImage::DxImage()

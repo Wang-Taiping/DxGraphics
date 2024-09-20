@@ -77,7 +77,7 @@ public:
 	void Uninitialize();
 	WriteFontCollection* FontCollection();
 	DxWriteFactory::WriteFactory* WriteFactory();
-	LPCWSTR FontFamily();
+	LPCWSTR FontFamily() const;
 	operator WriteFontCollection* ();
 	operator DxWriteFactory::WriteFactory* ();
 
@@ -102,7 +102,7 @@ public:
 	void Uninitialize();
 	WriteTextFormat* TextFormat();
 	DxWriteFactory::WriteFactory* WriteFactory();
-	float FontSize();
+	float FontSize() const;
 	operator WriteTextFormat* ();
 	operator DxWriteFactory::WriteFactory* ();
 
@@ -151,23 +151,22 @@ public:
 	bool BeginDraw();
 	HRESULT EndDraw();
 	void Clear(D2D1_COLOR_F Color = D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
-	void FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
-	D2D1_RECT_F PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
+	void FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 }, FLOAT alpha = 1.0f);
+	D2D1_RECT_F PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 }, FLOAT alpha = 1.0f);
 	void DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F BackColor, D2D1_COLOR_F FrontColor); // 0.0f ~ 100.0f
-	bool DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap = nullptr, D2D1_COLOR_F FrontColor = D2D1::ColorF(D2D1::ColorF::Black), D2D1_COLOR_F BackColor = D2D1::ColorF(D2D1::ColorF::White), D2D1_COLOR_F BorderColor = D2D1::ColorF(D2D1::ColorF::Black));
+	bool DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DxTextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap = nullptr, FLOAT alpha = 1.0f, D2D1_COLOR_F FrontColor = D2D1::ColorF(D2D1::ColorF::Black), D2D1_COLOR_F BackColor = D2D1::ColorF(D2D1::ColorF::White), D2D1_COLOR_F BorderColor = D2D1::ColorF(D2D1::ColorF::Black));
 	HRESULT Resize(UINT Width, UINT Height);
 	HRESULT Resize(const D2D1_SIZE_U& pixelSize);
 	HRESULT Resize(const D2D1_SIZE_U* pixelSize);
 	D2DTarget* Target();
 	operator D2DTarget* ();
+	void FlushGDI() const;
 
 private:
 	D2DTarget* pTarget;
 	HWND hWnd;
 	Interlayer interlayer;
 	bool tagDraw;
-
-	void FlushGDI();
 };
 
 class DXG_EXPORT DxImage
