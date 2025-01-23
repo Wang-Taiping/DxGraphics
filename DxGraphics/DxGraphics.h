@@ -5,7 +5,7 @@
 
 #ifdef __cplusplus // 检查编译器是否为 C++
 
-#include <d2d1_3.h> // 包含必要的 Direct2D 头文件
+#include <d2d1_3.h>   // 包含必要的 Direct2D 头文件
 #include <dwrite_3.h> // 包含必要的 DirectWrite 头文件
 
 // 管理 WIC 图像工厂的类
@@ -522,7 +522,7 @@ private:
  * @param targetRect 渲染目标上的目标矩形。
  * @return 用于填充的源矩形。
  */
-DXG_EXPORT D2D1_RECT_F CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
+DXG_EXPORT D2D1_RECT_F DxGCalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
 
 /**
  * 计算放置位图的目标矩形。
@@ -530,7 +530,7 @@ DXG_EXPORT D2D1_RECT_F CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_REC
  * @param targetRect 渲染目标上的目标矩形。
  * @return 用于放置的目标矩形。
  */
-DXG_EXPORT D2D1_RECT_F CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
+DXG_EXPORT D2D1_RECT_F DxGCalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect);
 
 /**
  * 使用整数坐标计算填充位图的源矩形。
@@ -538,7 +538,7 @@ DXG_EXPORT D2D1_RECT_F CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT
  * @param targetRect 渲染目标上的目标矩形。
  * @return 用于填充的源矩形。
  */
-DXG_EXPORT D2D1_RECT_U CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
+DXG_EXPORT D2D1_RECT_U DxGCalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
 
 /**
  * 使用整数坐标计算放置位图的目标矩形。
@@ -546,20 +546,20 @@ DXG_EXPORT D2D1_RECT_U CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_REC
  * @param targetRect 渲染目标上的目标矩形。
  * @return 用于放置的目标矩形。
  */
-DXG_EXPORT D2D1_RECT_U CalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
+DXG_EXPORT D2D1_RECT_U DxGCalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect);
 
 /**
  * 获取系统的DPI缩放比例。
  * @return DPI缩放因子。
  */
-DXG_EXPORT FLOAT GetDpiScaleForSystem();
+DXG_EXPORT FLOAT DxGetDpiScaleForSystem();
 
 /**
  * 获取特定窗口的DPI缩放比例。
  * @param hWnd 窗口句柄。
  * @return 窗口的DPI缩放因子。
  */
-DXG_EXPORT FLOAT GetDpiScaleForWindow(HWND hWnd);
+DXG_EXPORT FLOAT DxGetDpiScaleForWindow(HWND hWnd);
 
 /**
  * 将像素转换为设备独立像素（DIPs）。
@@ -567,7 +567,7 @@ DXG_EXPORT FLOAT GetDpiScaleForWindow(HWND hWnd);
      * @param DpiScale DPI缩放因子。
      * @return DIPs的数量。
      */
-DXG_EXPORT FLOAT PixelsToDips(UINT Pixels, FLOAT DpiScale);
+DXG_EXPORT FLOAT DxGPixelsToDips(UINT Pixels, FLOAT DpiScale);
 
 /**
  * 将设备独立像素（DIPs）转换为像素。
@@ -575,21 +575,21 @@ DXG_EXPORT FLOAT PixelsToDips(UINT Pixels, FLOAT DpiScale);
  * @param DpiScale DPI缩放因子。
  * @return 像素的数量。
  */
-DXG_EXPORT UINT DipsToPixels(FLOAT Dips, FLOAT DpiScale);
+DXG_EXPORT UINT DxGDipsToPixels(FLOAT Dips, FLOAT DpiScale);
 
 /**
  * 从矩形计算大小。
  * @param Rect 矩形。
  * @return 作为D2D1_SIZE_F结构的大小。
  */
-DXG_EXPORT D2D1_SIZE_F CalcSizeFormRect(D2D1_RECT_F Rect);
+DXG_EXPORT D2D1_SIZE_F DxGCalcSizeFormRect(D2D1_RECT_F Rect);
 
 /**
  * 使用整数坐标从矩形计算大小。
  * @param Rect 矩形。
  * @return 作为D2D1_SIZE_U结构的大小。
  */
-DXG_EXPORT D2D1_SIZE_U CalcSizeFormRect(D2D1_RECT_U Rect);
+DXG_EXPORT D2D1_SIZE_U DxGCalcSizeFormRect(D2D1_RECT_U Rect);
 
 /**
  * 将大小从像素转换为设备独立像素（DIPs）。
@@ -597,7 +597,7 @@ DXG_EXPORT D2D1_SIZE_U CalcSizeFormRect(D2D1_RECT_U Rect);
  * @param DpiScale DPI缩放因子。
  * @return DIPs的大小。
  */
-DXG_EXPORT D2D1_SIZE_F SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale);
+DXG_EXPORT D2D1_SIZE_F DxGSizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale);
 
 /**
  * 将矩形从像素转换为设备独立像素（DIPs）。
@@ -605,7 +605,7 @@ DXG_EXPORT D2D1_SIZE_F SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale);
  * @param DpiScale DPI缩放因子。
  * @return DIPs中的矩形。
  */
-DXG_EXPORT D2D1_RECT_F RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale);
+DXG_EXPORT D2D1_RECT_F DxGRectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale);
 
 /**
  * 将大小从设备独立像素（DIPs）转换为像素。
@@ -613,7 +613,7 @@ DXG_EXPORT D2D1_RECT_F RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale);
  * @param DpiScale DPI缩放因子。
  * @return 像素的大小。
  */
-DXG_EXPORT D2D1_SIZE_U SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale);
+DXG_EXPORT D2D1_SIZE_U DxGSizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale);
 
 /**
  * 将矩形从设备独立像素（DIPs）转换为像素。
@@ -621,7 +621,7 @@ DXG_EXPORT D2D1_SIZE_U SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale);
  * @param DpiScale DPI缩放因子。
  * @return 像素中的矩形。
  */
-DXG_EXPORT D2D1_RECT_U RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale);
+DXG_EXPORT D2D1_RECT_U DxGRectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale);
 
 /**
  * 计算画布内项目的中心矩形。
@@ -629,7 +629,7 @@ DXG_EXPORT D2D1_RECT_U RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale);
  * @param Canvas 画布的矩形。
  * @return 居中的矩形。
  */
-DXG_EXPORT D2D1_RECT_F CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas);
+DXG_EXPORT D2D1_RECT_F DxGCalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas);
 
 /**
  * 使用整数坐标计算画布内项目的中心矩形。
@@ -637,21 +637,21 @@ DXG_EXPORT D2D1_RECT_F CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas);
  * @param Canvas 画布的矩形。
  * @return 居中的矩形。
  */
-DXG_EXPORT D2D1_RECT_U CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas);
+DXG_EXPORT D2D1_RECT_U DxGCalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas);
 
 /**
  * 从LPARAM值获取大小。
  * @param lParam LPARAM值。
  * @return 作为D2D1_SIZE_U结构的大小。
  */
-DXG_EXPORT D2D1_SIZE_U GetSizeFromlParam(LPARAM lParam);
+DXG_EXPORT D2D1_SIZE_U DxGetSizeFromlParam(LPARAM lParam);
 
 /**
  * 从LPARAM值获取点。
  * @param lParam LPARAM值。
  * @return 作为D2D1_POINT_2U结构的点。
  */
-DXG_EXPORT D2D1_POINT_2U GetPointFromlParam(LPARAM lParam);
+DXG_EXPORT D2D1_POINT_2U DxGetPointFromlParam(LPARAM lParam);
 
 /**
  * 检查点是否在矩形内。
@@ -659,7 +659,7 @@ DXG_EXPORT D2D1_POINT_2U GetPointFromlParam(LPARAM lParam);
  * @param Rect 矩形。
  * @return 如果点在矩形内则为true，否则为false。
  */
-DXG_EXPORT bool IsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect);
+DXG_EXPORT bool DxGIsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect);
 
 /**
  * 使用整数坐标检查点是否在矩形内。
@@ -667,7 +667,7 @@ DXG_EXPORT bool IsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect);
  * @param Rect 矩形。
  * @return 如果点在矩形内则为true，否则为false。
  */
-DXG_EXPORT bool IsPointInRect(D2D1_SIZE_U Point, D2D1_RECT_U Rect);
+DXG_EXPORT bool DxGIsPointInRect(D2D1_SIZE_U Point, D2D1_RECT_U Rect);
 
 #endif // __cplusplus
 

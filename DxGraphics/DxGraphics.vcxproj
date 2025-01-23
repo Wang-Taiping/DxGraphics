@@ -280,6 +280,7 @@
   <ItemGroup>
     <ClCompile Include="DxGraphics.cpp" />
     <ClCompile Include="DxGraphicsExC.cpp" />
+    <None Include="Direct2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

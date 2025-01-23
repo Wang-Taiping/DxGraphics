@@ -118,7 +118,7 @@ extern "C" {
 		LPVOID lpUserParam; ///< 用户定义参数。
 	};
 
-	typedef struct MSGLOOPPROCPARAM INITPARAM, IDLEPARAM;
+	typedef struct MSGLOOPPROCPARAM INITPARAM, * PINITPARAM, IDLEPARAM, * PIDLEPARAM;
 
 	/**
 	 * @brief 使用 ANSI 字符串注册窗口类。
@@ -132,7 +132,7 @@ extern "C" {
 	 * @param lpszMenuName 菜单名。
 	 * @return 唯一标识类的原子值。
 	 */
-	DXG_EXPORT ATOM DXG_API RegisterWndClassA(UINT style, HINSTANCE hInstance, LPCSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HCURSOR hCursor, LPCSTR lpszMenuName);
+	DXG_EXPORT ATOM DXG_API DxGRegisterClassA(UINT style, HINSTANCE hInstance, LPCSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HCURSOR hCursor, LPCSTR lpszMenuName);
 
 	/**
 	 * @brief 使用 Unicode 字符串注册窗口类。
@@ -146,7 +146,7 @@ extern "C" {
 	 * @param lpszMenuName 菜单名。
 	 * @return 唯一标识类的原子值。
 	 */
-	DXG_EXPORT ATOM DXG_API RegisterWndClassW(UINT style, HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HCURSOR hCursor, LPCWSTR lpszMenuName);
+	DXG_EXPORT ATOM DXG_API DxGRegisterClassW(UINT style, HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HCURSOR hCursor, LPCWSTR lpszMenuName);
 
 	/**
 	 * @brief 使用 ANSI 字符串注册带扩展属性的窗口类。
@@ -162,7 +162,7 @@ extern "C" {
 	 * @param lpszMenuName 菜单名。
 	 * @return 唯一标识类的原子值。
 	 */
-	DXG_EXPORT ATOM DXG_API RegisterWndClassExA(UINT style, HINSTANCE hInstance, LPCSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HICON hIconSm, HCURSOR hCursor, HBRUSH hbrBackground, LPCSTR lpszMenuName);
+	DXG_EXPORT ATOM DXG_API DxGRegisterClassExA(UINT style, HINSTANCE hInstance, LPCSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HICON hIconSm, HCURSOR hCursor, HBRUSH hbrBackground, LPCSTR lpszMenuName);
 
 	/**
 	 * @brief 使用 Unicode 字符串注册带扩展属性的窗口类。
@@ -178,13 +178,13 @@ extern "C" {
 	 * @param lpszMenuName 菜单名。
 	 * @return 唯一标识类的原子值。
 	 */
-	DXG_EXPORT ATOM DXG_API RegisterWndClassExW(UINT style, HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HICON hIconSm, HCURSOR hCursor, HBRUSH hbrBackground, LPCWSTR lpszMenuName);
+	DXG_EXPORT ATOM DXG_API DxGRegisterClassExW(UINT style, HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HICON hIconSm, HCURSOR hCursor, HBRUSH hbrBackground, LPCWSTR lpszMenuName);
 
 	/**
 	 * @brief 启动新线程上的消息循环。
 	 *
 	 * 如果传入 nullptr 作为 IdleCallback，程序使用默认的 idle 回调函数，该函数唯一的功能是等待一段时间（默认为 10 毫秒）。
-	 * 可以通过 SetThreadDefaultIdleWaitTime 更改等待时间。线程在等待期间不会检查消息。
+	 * 可以通过 DxGSetThreadDefaultIdleWaitTime 更改等待时间。线程在等待期间不会检查消息。
 	 * 如果 idle 回调函数迅速返回，程序会频繁检查线程消息，可能会导致 CPU 占用率升高。
 	 * 如果 idle 回调函数返回时间过长，即使有新的线程消息到达，也会等到 idle 返回后才会检查新消息。
 	 *
@@ -194,28 +194,28 @@ extern "C" {
 	 * @param IdleParam 空闲参数。
 	 * @return 状态码。
 	 */
-	DXG_EXPORT int DXG_API StartThreadMessageLoop(MSGLOOPINIT InitCallback, INITPARAM InitParam, MSGLOOPIDLE IdleCallback, IDLEPARAM IdleParam);
+	DXG_EXPORT int DXG_API DxGStartThreadMessageLoop(MSGLOOPINIT InitCallback, PINITPARAM InitParam, MSGLOOPIDLE IdleCallback, PIDLEPARAM IdleParam);
 
 	/**
 	 * @brief 设置线程消息循环的默认空闲等待时间。
 	 *
 	 * @param dwMilliseconds 空闲等待时间（毫秒）。
 	 */
-	DXG_EXPORT void DXG_API SetThreadDefaultIdleWaitTime(DWORD dwMilliseconds);
+	DXG_EXPORT void DXG_API DxGSetThreadDefaultIdleWaitTime(DWORD dwMilliseconds);
 
 	/**
 	 * @brief 设置线程消息循环的空闲回调函数。
 	 *
 	 * @param IdleCallback 空闲回调函数。
 	 */
-	DXG_EXPORT void DXG_API SetThreadMessageLoopIdleCallback(MSGLOOPIDLE IdleCallback);
+	DXG_EXPORT void DXG_API DxGSetThreadMessageLoopIdleCallback(MSGLOOPIDLE IdleCallback);
 
 	/**
 	 * @brief 设置空闲回调函数的参数。
 	 *
 	 * @param IdleParam 空闲参数。
 	 */
-	DXG_EXPORT void DXG_API SetThreadMessageLoopIdleParam(IDLEPARAM IdleParam);
+	DXG_EXPORT void DXG_API DxGSetThreadMessageLoopIdleParam(PIDLEPARAM IdleParam);
 
 	/**
 	 * @brief 设置线程消息循环的空闲回调函数及参数。
@@ -223,7 +223,7 @@ extern "C" {
 	 * @param IdleCallback 空闲回调函数。
 	 * @param IdleParam 空闲参数。
 	 */
-	DXG_EXPORT void DXG_API SetThreadMessageLoopIdleInformation(MSGLOOPIDLE IdleCallback, IDLEPARAM IdleParam);
+	DXG_EXPORT void DXG_API DxGSetThreadMessageLoopIdleInformation(MSGLOOPIDLE IdleCallback, PIDLEPARAM IdleParam);
 
 	/**
 	 * @brief 将窗口属性注册到当前线程。
@@ -231,7 +231,7 @@ extern "C" {
 	 * @param hWnd 窗口句柄。
 	 * @return 如果成功返回 TRUE，否则返回 FALSE。
 	 */
-	DXG_EXPORT BOOL DXG_API RegisterHWNDAttributesToThread(HWND hWnd);
+	DXG_EXPORT BOOL DXG_API DxGRegisterHWNDAttributesToThread(HWND hWnd);
 
 	/**
 	 * @brief 从当前线程注销窗口属性。
@@ -239,7 +239,7 @@ extern "C" {
 	 * @param hWnd 窗口句柄。
 	 * @return 如果成功返回 TRUE，否则返回 FALSE。
 	 */
-	DXG_EXPORT BOOL DXG_API UnregisterHWNDAttributesFromThread(HWND hWnd);
+	DXG_EXPORT BOOL DXG_API DxGUnregisterHWNDAttributesFromThread(HWND hWnd);
 
 	/**
 	 * @brief 将加速表绑定到当前线程的窗口属性。
@@ -248,7 +248,7 @@ extern "C" {
 	 * @param hAccel 加速表句柄。
 	 * @return 如果成功返回 TRUE，否则返回 FALSE。
 	 */
-	DXG_EXPORT BOOL DXG_API BindAcceleratorToThreadHWNDAttributes(HWND hWnd, HACCEL hAccel);
+	DXG_EXPORT BOOL DXG_API DxGBindAcceleratorToThreadHWNDAttributes(HWND hWnd, HACCEL hAccel);
 
 #ifdef __cplusplus
 }

@@ -469,7 +469,7 @@ void DxTarget2D::FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT
 		srcRect.right = pBitmap->GetSize().width;
 		srcRect.bottom = pBitmap->GetSize().height;
 	}
-	srcRect = CalcFillBitmapSourceRect(srcRect, dstRect);
+	srcRect = DxGCalcFillBitmapSourceRect(srcRect, dstRect);
 	pTarget->DrawBitmap(pBitmap, dstRect, alpha, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, srcRect);
 }
 
@@ -482,7 +482,7 @@ D2D1_RECT_F DxTarget2D::PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D
 		srcRect.right = pBitmap->GetSize().width;
 		srcRect.bottom = pBitmap->GetSize().height;
 	}
-	dstRect = CalcPutBitmapTargetRect(srcRect, dstRect);
+	dstRect = DxGCalcPutBitmapTargetRect(srcRect, dstRect);
 	pTarget->DrawBitmap(pBitmap, dstRect, alpha, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, srcRect);
 	return dstRect;
 }
@@ -809,7 +809,7 @@ DxImage::operator Image** ()
 }
 
 // 计算位图的裁剪区域以保证位图在绘制到指定位置时不会拉伸
-D2D1_RECT_F CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect)
+D2D1_RECT_F DxGCalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect)
 {
 	FLOAT xS = targetRect.right - targetRect.left;
 	FLOAT yS = targetRect.bottom - targetRect.top;
@@ -834,7 +834,7 @@ D2D1_RECT_F CalcFillBitmapSourceRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetR
 }
 
 // 计算位图的放置区域以保证位图在绘制到指定位置时不会拉伸
-D2D1_RECT_F CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect)
+D2D1_RECT_F DxGCalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRect)
 {
 	FLOAT xS = targetRect.right - targetRect.left;
 	FLOAT yS = targetRect.bottom - targetRect.top;
@@ -859,7 +859,7 @@ D2D1_RECT_F CalcPutBitmapTargetRect(D2D1_RECT_F bitmapRect, D2D1_RECT_F targetRe
 }
 
 // 计算位图的裁剪区域以保证位图在绘制到指定位置时不会拉伸
-D2D1_RECT_U CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect)
+D2D1_RECT_U DxGCalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect)
 {
 	UINT xS = targetRect.right - targetRect.left;
 	UINT yS = targetRect.bottom - targetRect.top;
@@ -884,7 +884,7 @@ D2D1_RECT_U CalcFillBitmapSourceRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetR
 }
 
 // 计算位图的放置区域以保证位图在绘制到指定位置时不会拉伸
-D2D1_RECT_U CalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect)
+D2D1_RECT_U DxGCalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRect)
 {
 	UINT xS = targetRect.right - targetRect.left;
 	UINT yS = targetRect.bottom - targetRect.top;
@@ -909,43 +909,43 @@ D2D1_RECT_U CalcPutBitmapTargetRect(D2D1_RECT_U bitmapRect, D2D1_RECT_U targetRe
 }
 
 // 获取系统 DPI 缩放比例
-FLOAT GetDpiScaleForSystem()
+FLOAT DxGetDpiScaleForSystem()
 {
 	return FLOAT(GetDpiForSystem()) / USER_DEFAULT_SCREEN_DPI;
 }
 
 // 获取窗口 DPI 缩放比例
-FLOAT GetDpiScaleForWindow(HWND hWnd)
+FLOAT DxGetDpiScaleForWindow(HWND hWnd)
 {
 	return FLOAT(GetDpiForWindow(hWnd)) / USER_DEFAULT_SCREEN_DPI;
 }
 
 // 像素转换为 DIP (设备独立像素)
-FLOAT PixelsToDips(UINT Pixels, FLOAT DpiScale)
+FLOAT DxGPixelsToDips(UINT Pixels, FLOAT DpiScale)
 {
 	return FLOAT(Pixels) / DpiScale;
 }
 
 // DIP 转换为像素
-UINT DipsToPixels(FLOAT Dips, FLOAT DpiScale)
+UINT DxGDipsToPixels(FLOAT Dips, FLOAT DpiScale)
 {
 	return UINT(Dips * DpiScale);
 }
 
 // 从矩形计算尺寸
-D2D1_SIZE_F CalcSizeFormRect(D2D1_RECT_F Rect)
+D2D1_SIZE_F DxGCalcSizeFormRect(D2D1_RECT_F Rect)
 {
 	return D2D1_SIZE_F({ Rect.right - Rect.left, Rect.bottom - Rect.top });
 }
 
 // 从矩形计算尺寸
-D2D1_SIZE_U CalcSizeFormRect(D2D1_RECT_U Rect)
+D2D1_SIZE_U DxGCalcSizeFormRect(D2D1_RECT_U Rect)
 {
 	return D2D1_SIZE_U({ Rect.right - Rect.left, Rect.bottom - Rect.top });
 }
 
 // 将尺寸从像素转换为 DIP
-D2D1_SIZE_F SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale)
+D2D1_SIZE_F DxGSizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale)
 {
 	return D2D1_SIZE_F({
 		Pixels.width / DpiScale,
@@ -954,7 +954,7 @@ D2D1_SIZE_F SizePixelsToDips(D2D1_SIZE_U Pixels, FLOAT DpiScale)
 }
 
 // 将矩形从像素转换为 DIP
-D2D1_RECT_F RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale)
+D2D1_RECT_F DxGRectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale)
 {
 	return D2D1_RECT_F({
 		FLOAT(Pixels.left) / DpiScale,
@@ -965,7 +965,7 @@ D2D1_RECT_F RectPixelsToDips(D2D1_RECT_U Pixels, FLOAT DpiScale)
 }
 
 // 将尺寸从 DIP 转换为像素
-D2D1_SIZE_U SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale)
+D2D1_SIZE_U DxGSizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale)
 {
 	return D2D1_SIZE_U({
 		UINT(Dips.width * DpiScale),
@@ -974,7 +974,7 @@ D2D1_SIZE_U SizeDipsToPixels(D2D1_SIZE_F Dips, FLOAT DpiScale)
 }
 
 // 将矩形从 DIP 转换为像素
-D2D1_RECT_U RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale)
+D2D1_RECT_U DxGRectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale)
 {
 	return D2D1_RECT_U({
 		UINT(Dips.left * DpiScale),
@@ -988,7 +988,7 @@ D2D1_RECT_U RectDipsToPixels(D2D1_RECT_F Dips, FLOAT DpiScale)
 // 参数 Item: 项目的尺寸（宽度和高度）
 // 参数 Canvas: 画布的矩形区域
 // 返回值: 位于画布中心的矩形
-D2D1_RECT_F CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas)
+D2D1_RECT_F DxGCalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas)
 {
 	D2D1_RECT_F result{}; // 初始化结果矩形
 	FLOAT cWidth = Canvas.right - Canvas.left; // 计算画布的宽度
@@ -1016,7 +1016,7 @@ D2D1_RECT_F CalcCenterRect(D2D1_SIZE_F Item, D2D1_RECT_F Canvas)
 // 参数 Item: 项目的尺寸（宽度和高度）
 // 参数 Canvas: 画布的矩形区域
 // 返回值: 位于画布中心的矩形
-D2D1_RECT_U CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas)
+D2D1_RECT_U DxGCalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas)
 {
 	D2D1_RECT_U result{}; // 初始化结果矩形
 	UINT cWidth = Canvas.right - Canvas.left; // 计算画布的宽度
@@ -1043,7 +1043,7 @@ D2D1_RECT_U CalcCenterRect(D2D1_SIZE_U Item, D2D1_RECT_U Canvas)
 // 从 LPARAM 获取尺寸
 // 参数 lParam: 包含尺寸信息的 LPARAM
 // 返回值: 包含宽度和高度的 D2D1_SIZE_U 结构
-D2D1_SIZE_U GetSizeFromlParam(LPARAM lParam)
+D2D1_SIZE_U DxGetSizeFromlParam(LPARAM lParam)
 {
 	return D2D1::SizeU(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); // 从 lParam 中提取 X 和 Y 坐标，并返回尺寸
 }
@@ -1051,7 +1051,7 @@ D2D1_SIZE_U GetSizeFromlParam(LPARAM lParam)
 // 从 LPARAM 获取点
 // 参数 lParam: 包含点信息的 LPARAM
 // 返回值: 包含 X 和 Y 坐标的 D2D1_POINT_2U 结构
-D2D1_POINT_2U GetPointFromlParam(LPARAM lParam)
+D2D1_POINT_2U DxGetPointFromlParam(LPARAM lParam)
 {
 	return D2D1::Point2U(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); // 从 lParam 中提取 X 和 Y 坐标，并返回点
 }
@@ -1060,7 +1060,7 @@ D2D1_POINT_2U GetPointFromlParam(LPARAM lParam)
 // 参数 Point: 要判断的点
 // 参数 Rect: 矩形区域
 // 返回值: 如果点在矩形内返回 true，否则返回 false
-bool IsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect)
+bool DxGIsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect)
 {
 	return (Point.width > Rect.left && Point.width < Rect.right && Point.height > Rect.top && Point.height < Rect.bottom); // 判断点是否在矩形边界内
 }
@@ -1069,7 +1069,7 @@ bool IsPointInRect(D2D1_SIZE_F Point, D2D1_RECT_F Rect)
 // 参数 Point: 要判断的点
 // 参数 Rect: 矩形区域
 // 返回值: 如果点在矩形内返回 true，否则返回 false
-bool IsPointInRect(D2D1_SIZE_U Point, D2D1_RECT_U Rect)
+bool DxGIsPointInRect(D2D1_SIZE_U Point, D2D1_RECT_U Rect)
 {
 	return (Point.width > Rect.left && Point.width < Rect.right && Point.height > Rect.top && Point.height < Rect.bottom); // 判断点是否在矩形边界内
 }

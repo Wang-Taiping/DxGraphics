@@ -1,51 +1,7 @@
-# DxGraphics
+// 本文件为DxGraphics库的示例代码，用于展示如何使用DxGraphics库创建一个窗口并绘制内容
+// 本文件的代码将创建一个窗口并使用Direct2D绘制内容，仅供参考
+// 本文件的代码不参与编译，不会生成可执行文件
 
-DxGraphics 是一个基于 DirectX API 的图形库封装，提供了简化的接口来进行图形渲染和窗口管理。该库使用 C++17 编写，并包含 Direct2D 和 DirectWrite 的封装。
-
-## 目录
-
-- [安装](#install)
-- [使用方法](#usage-instructions)
-- [示例程序](#example-program)
-- [许可证](#license)
-
-## <span id="install">安装</span>
-
-### 先决条件
-
-- **操作系统**：Windows 10 版本 1607 (也称为 Windows 10 Anniversary Update) 或更高版本。
-- **Windows SDK**：Windows 10 SDK 版本 10.0.14393.0 或更高版本。
-- **平台工具集**：v141 或更高版本（Visual Studio 2017 或更高版本）。
-- **C++ 版本（推荐）**：C++17 或更高版本。
-
-### 开始使用
-
-1. 克隆仓库：
-   
-   ```bash
-   git clone https://github.com/Wang-Taiping/DxGraphics.git
-   ```
-2. 打开 `DxGraphics` 目录下的解决方案文件 `DxGraphics.sln`。
-3. 构建解决方案。
-
-### 注意事项
-
-`Debug` `Release` 版本使用 `/MTd` `/MT` 编译，`Debug_DLL` `Release_DLL` 使用 `/MDd` `/MD` 编译。
-
-## <span id="usage-instructions">使用方法</span>
-
-在您的项目中包含 `DxGraphics` 头文件，并链接相应的库文件。
-
-```cpp
-#include "DxGraphics.h" // Direct2D 相关内容
-#include "DxGraphicsExC.h" // Win32 窗口（类）、消息循环相关内容
-```
-
-## <span id="example-program">示例程序</span>
-
-以下是一个使用 DxGraphics 的示例程序：
-
-```cpp
 #include "DxGraphics.h"
 #include "DxGraphicsExC.h"
 
@@ -80,7 +36,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	//imagingFactory.Initialize();
 
 	// 启动消息循环
-	int ret = DxGStartThreadMessageLoop(InitFunction, &param, nullptr, nullptr);
+	int ret = DxGStartThreadMessageLoop(InitFunction, &param, IdleFunction, &param);
 
 	// 反初始化 Direct2D 工厂
 	//imagingFactory.Uninitialize();
@@ -180,8 +136,3 @@ BOOL DXG_CALLBACK IdleFunction(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPV
 	// TODO: 空闲函数代码...
 	return TRUE; // 事实上程序不关心Idle函数的返回值，可以返回任意值
 }
-```
-
-## <span id="license">许可证</span>
-
-此项目使用 MIT 许可证。有关更多信息，请参阅 LICENSE 文件。
