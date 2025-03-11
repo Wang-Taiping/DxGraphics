@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="示例程序">
-      <UniqueIdentifier>{f31c68aa-f42b-4481-8611-42938e2feb6b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGraphics.cpp">
@@ -26,20 +23,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
-    <None Include="Direct2D.cpp">
-      <Filter>示例程序</Filter>
-    </None>
+    <ClInclude Include="DxGBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DxGraphics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DxGraphicsExC.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="DxGBase.h">
-      <Filter>头文件</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="DxGraphics.h">
-      <Filter>头文件</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="DxGraphicsExC.h">
-      <Filter>头文件</Filter>
-    </CopyFileToFolders>
+    <None Include="cpp.hint" />
+    <None Include="Direct2D.cpp.example" />
   </ItemGroup>
 </Project>
